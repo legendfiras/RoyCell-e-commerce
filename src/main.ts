@@ -197,6 +197,14 @@ const fetchJson = async <T>(path: string, options?: RequestInit): Promise<T> => 
 
   try {
     const response = await fetch(`${apiBase}${path}`, options);
+    const contentType = response.headers.get("content-type") || "";
+
+    if (contentType.includes("text/html")) {
+      const message = `API returned HTML for ${path}. Check Vercel API routing and environment variables.`;
+      writeApiLog({ time: new Date().toISOString(), method, path, status: response.status, message });
+      throw new Error(message);
+    }
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: "Request failed" }));
       const message = error.message || `Request failed with status ${response.status}`;
