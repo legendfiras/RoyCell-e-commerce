@@ -21,7 +21,7 @@ export default async function handler(_req: unknown, res: VercelResponse) {
   }
 
   try {
-    const client = createMongoClient();
+    const client = await createMongoClient();
     await client.connect();
     const hasAdmin = (await client.db().collection("adminusers").countDocuments()) > 0;
     await client.close();
@@ -30,7 +30,8 @@ export default async function handler(_req: unknown, res: VercelResponse) {
   } catch (error) {
     return res.status(500).json({
       message: "Could not read admin status from MongoDB",
-      detail: error instanceof Error ? error.message : "Unknown MongoDB error"
+      detail: error instanceof Error ? error.message : "Unknown MongoDB error",
+      diagnostics
     });
   }
 }

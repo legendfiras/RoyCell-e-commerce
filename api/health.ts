@@ -31,7 +31,7 @@ export default async function handler(_req: unknown, res: VercelResponse) {
   }
 
   try {
-    const client = createMongoClient();
+    const client = await createMongoClient();
     await client.connect();
     const database = client.db().databaseName;
     await client.db().admin().ping();

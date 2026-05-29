@@ -1,5 +1,3 @@
-import { MongoClient } from "mongodb";
-
 export type MongoDiagnostics = {
   configured: boolean;
   validScheme: boolean;
@@ -32,7 +30,8 @@ export const getMongoDiagnostics = () => {
   };
 };
 
-export const createMongoClient = () => {
+export const createMongoClient = async () => {
+  const { MongoClient } = await import("mongodb");
   const mongoUri = process.env.MONGODB_URI?.trim() || "";
   return new MongoClient(mongoUri, {
     tls: true,
