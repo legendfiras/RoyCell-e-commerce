@@ -1,5 +1,3 @@
-import { createMongoClient, getMongoDiagnostics } from "../_mongo";
-
 export const config = {
   maxDuration: 15
 };
@@ -7,6 +5,42 @@ export const config = {
 type VercelResponse = {
   status: (code: number) => VercelResponse;
   json: (body: unknown) => void;
+};
+
+const getMongoDiagnostics = () => {
+  const mongoUri = process.env.MONGODB_URI?.trim() || "";
+  const validScheme = /^mongodb(\+srv)?:\/\//.test(mongoUri);
+  let database: string | null = null;
+  let uriHost: string | null = null;
+
+  if (validScheme) {
+    try {
+      const parsed = new URL(mongoUri);
+      database = parsed.pathname.replace(/^\//, "") || "test";
+      uriHost = parsed.host;
+    } catch {
+      database = null;
+      uriHost = null;
+    }
+  }
+
+  return {
+    configured: Boolean(mongoUri),
+    validScheme,
+    database,
+    uriHost
+  };
+};
+
+const createMongoClient = async () => {
+  const { MongoClient } = await import("mongodb");
+  return new MongoClient(process.env.MONGODB_URI?.trim() || "", {
+    tls: true,
+    connectTimeoutMS: 8000,
+    serverSelectionTimeoutMS: 8000,
+    socketTimeoutMS: 10000,
+    maxPoolSize: 1
+  });
 };
 
 export default async function handler(_req: unknown, res: VercelResponse) {
