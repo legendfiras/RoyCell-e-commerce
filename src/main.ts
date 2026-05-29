@@ -206,8 +206,11 @@ const fetchJson = async <T>(path: string, options?: RequestInit): Promise<T> => 
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: "Request failed" }));
-      const message = error.message || `Request failed with status ${response.status}`;
+      const error = await response
+        .json()
+        .catch(() => ({ message: `Request failed with status ${response.status}` }));
+      const detail = typeof error.detail === "string" ? `: ${error.detail}` : "";
+      const message = `${error.message || `Request failed with status ${response.status}`}${detail}`;
       writeApiLog({ time: new Date().toISOString(), method, path, status: response.status, message });
       throw new Error(message);
     }

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { assertConfig, config } from "./config";
+import { assertMongoConfig, config } from "./config";
 
 export const connectDb = async () => {
-  assertConfig();
+  assertMongoConfig();
 
   if (mongoose.connection.readyState === 1) {
     return;

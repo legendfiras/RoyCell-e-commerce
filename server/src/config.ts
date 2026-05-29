@@ -27,15 +27,9 @@ export const config = {
   ]
 };
 
-export const assertConfig = () => {
-  const missing = [
-    !config.mongoUri && "MONGODB_URI",
-    !config.jwtSecret && "JWT_SECRET",
-    !config.adminSetupKey && "ADMIN_SETUP_KEY"
-  ].filter(Boolean);
-
-  if (missing.length) {
-    throw new Error(`Missing required environment variables: ${missing.join(", ")}`);
+export const assertMongoConfig = () => {
+  if (!config.mongoUri) {
+    throw new Error("Missing required environment variable: MONGODB_URI");
   }
 
   if (!mongoUriPattern.test(config.mongoUri)) {
@@ -43,12 +37,30 @@ export const assertConfig = () => {
       "Invalid MONGODB_URI. Paste the full MongoDB connection string from Atlas; it must start with mongodb:// or mongodb+srv://."
     );
   }
+};
+
+export const assertAuthConfig = () => {
+  if (!config.jwtSecret) {
+    throw new Error("Missing required environment variable: JWT_SECRET");
+  }
 
   if (config.jwtSecret.length < 32) {
     throw new Error("JWT_SECRET must be at least 32 characters long.");
+  }
+};
+
+export const assertAdminResetConfig = () => {
+  if (!config.adminSetupKey) {
+    throw new Error("Missing required environment variable: ADMIN_SETUP_KEY");
   }
 
   if (config.adminSetupKey.length < 24) {
     throw new Error("ADMIN_SETUP_KEY must be at least 24 characters long.");
   }
+};
+
+export const assertConfig = () => {
+  assertMongoConfig();
+  assertAuthConfig();
+  assertAdminResetConfig();
 };

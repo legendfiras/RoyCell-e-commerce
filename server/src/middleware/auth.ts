@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { config } from "../config";
+import { assertAuthConfig, config } from "../config";
 
 export type AuthRequest = Request & {
   adminId?: string;
@@ -16,6 +16,7 @@ export const requireAdmin = (req: AuthRequest, res: Response, next: NextFunction
   }
 
   try {
+    assertAuthConfig();
     const payload = jwt.verify(token, config.jwtSecret) as { adminId: string };
     req.adminId = payload.adminId;
     next();

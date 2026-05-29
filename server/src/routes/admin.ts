@@ -1,7 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { config } from "../config";
+import { assertAdminResetConfig, assertAuthConfig, config } from "../config";
 import { AdminUser } from "../models/AdminUser";
 import { requireAdmin } from "../middleware/auth";
 
@@ -30,6 +30,7 @@ adminRouter.post("/setup", async (req, res) => {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
+  assertAuthConfig();
   const admin = await AdminUser.create({ username, passwordHash });
   res.status(201).json({ token: signToken(String(admin._id)) });
 });
@@ -43,11 +44,13 @@ adminRouter.post("/login", async (req, res) => {
     return;
   }
 
+  assertAuthConfig();
   res.json({ token: signToken(String(admin._id)) });
 });
 
 adminRouter.post("/reset-password", async (req, res) => {
   const { resetKey, username, password } = req.body;
+  assertAdminResetConfig();
   if (resetKey !== config.adminSetupKey) {
     res.status(403).json({ message: "Invalid reset key" });
     return;
