@@ -52,7 +52,7 @@ After deployment, open `/admin` and sign in with the Mongo admin account.
 
 ### Vercel
 
-The project includes `vercel.json`, so Vercel serves the Vite app and sends `/api/*` requests to the serverless Express handler.
+The project includes `vercel.json`, so Vercel builds the Vite app and sends `/api/*` requests to serverless API functions.
 
 In Vercel Project Settings, add these Environment Variables for Production:
 
