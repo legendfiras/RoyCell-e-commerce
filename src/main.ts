@@ -169,6 +169,7 @@ const apiDebugKey = "roy-cell-api-debug";
 
 let adminHasUser = Boolean(localStorage.getItem(adminUserKey));
 let adminOrders: Order[] = [];
+let adminStatusError = "";
 
 const getAdminToken = () => sessionStorage.getItem(adminSessionKey) || "";
 
@@ -277,11 +278,16 @@ const syncAdminFromApi = async () => {
   try {
     const status = await fetchJson<{ hasAdmin: boolean }>("/admin/status");
     adminHasUser = status.hasAdmin;
+    adminStatusError = "";
     if (getAdminToken()) {
       adminOrders = await fetchJson<Order[]>("/orders", { headers: apiHeaders() });
     }
   } catch (error) {
     console.warn("Admin sync failed", error);
+    adminStatusError =
+      error instanceof Error
+        ? error.message
+        : "Could not connect to the API. Check deployment environment variables.";
     adminOrders = loadOrders();
   }
 };
@@ -592,6 +598,19 @@ const adminShell = () => {
   const orders = adminOrders;
   const totalRevenue = orders.reduce((total, order) => total + order.total, 0);
   const editingProductId = sessionStorage.getItem("roy-cell-editing-product");
+
+  if (adminStatusError) {
+    return `
+      <main class="admin-page">
+        <section class="admin-auth">
+          <a class="brand" href="/"><span>Roy</span> Cell</a>
+          <h1>Admin unavailable</h1>
+          <p>The admin API could not be reached.</p>
+          <p class="admin-message">${adminStatusError}</p>
+        </section>
+      </main>
+    `;
+  }
 
   if (!adminHasUser) {
     return `
