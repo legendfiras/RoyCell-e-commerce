@@ -8,7 +8,7 @@
     "server": "tsx server/src/index.ts",
     "start": "tsx server/src/index.ts",
     "build": "tsc && npm run check:server && vite build",
-    "check:server": "tsc --noEmit --module ESNext --moduleResolution bundler --target ES2020 --esModuleInterop --skipLibCheck --strict server/src/index.ts api/[...path].ts",
+    "check:server": "tsc -p tsconfig.server.json",
     "preview": "vite preview --host 127.0.0.1"
   },
   "devDependencies": {

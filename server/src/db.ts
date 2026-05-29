@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
-import { config } from "./config";
+import { assertConfig, config } from "./config";
 
 export const connectDb = async () => {
+  assertConfig();
+
   if (mongoose.connection.readyState === 1) {
     return;
   }

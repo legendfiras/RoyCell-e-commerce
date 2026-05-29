@@ -2,13 +2,11 @@ import express from "express";
 import cors from "cors";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { assertConfig, config } from "./config";
+import { config } from "./config";
 import { getDbHealth } from "./db";
 import { adminRouter } from "./routes/admin";
 import { productsRouter } from "./routes/products";
 import { ordersRouter } from "./routes/orders";
-
-assertConfig();
 
 export const app = express();
 
