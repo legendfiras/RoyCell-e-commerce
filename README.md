@@ -71,6 +71,7 @@ Check API and MongoDB status:
 
 ```bash
 GET /api/health
+GET /api/mongo-ping
 ```
 
 In the browser console, inspect recent API failures:
