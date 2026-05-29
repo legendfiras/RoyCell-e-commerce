@@ -40,6 +40,18 @@ type ApiDebugEntry = {
   message: string;
 };
 
+type MongoPingResult = {
+  ok: boolean;
+  message?: string;
+  detail?: string;
+  diagnostics?: {
+    configured: boolean;
+    validScheme: boolean;
+    database: string | null;
+    uriHost: string | null;
+  };
+};
+
 declare global {
   interface Window {
     royCellDebug?: {
@@ -166,6 +178,7 @@ const apiBase =
     ? "http://127.0.0.1:4000/api"
     : "/api");
 const apiDebugKey = "roy-cell-api-debug";
+const appBuildId = "admin-api-diagnostics-2026-05-29";
 
 let adminHasUser = Boolean(localStorage.getItem(adminUserKey));
 let adminOrders: Order[] = [];
@@ -295,9 +308,20 @@ const syncAdminFromApi = async () => {
     }
   } catch (error) {
     console.warn("Admin sync failed", error);
+    let detail = "";
+    try {
+      const mongo = await fetchJson<MongoPingResult>("/mongo-ping");
+      detail = mongo.ok ? " Mongo ping succeeded, but admin status failed." : "";
+    } catch (mongoError) {
+      detail =
+        mongoError instanceof Error
+          ? ` Mongo check: ${mongoError.message}`
+          : " Mongo check failed.";
+    }
+
     adminStatusError =
       error instanceof Error
-        ? error.message
+        ? `${error.message}${detail}`
         : "Could not connect to the API. Check deployment environment variables.";
     adminOrders = loadOrders();
   }
@@ -618,6 +642,7 @@ const adminShell = () => {
           <h1>Admin unavailable</h1>
           <p>The admin API could not be reached.</p>
           <p class="admin-message">${adminStatusError}</p>
+          <p class="admin-message">API base: ${apiBase} | Build: ${appBuildId}</p>
         </section>
       </main>
     `;
