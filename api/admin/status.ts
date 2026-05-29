@@ -1,24 +1,27 @@
-import { MongoClient } from "mongodb";
+import { createMongoClient, getMongoDiagnostics } from "../_mongo";
+
+export const config = {
+  maxDuration: 15
+};
 
 type VercelResponse = {
   status: (code: number) => VercelResponse;
   json: (body: unknown) => void;
 };
 
-const isMongoUri = (value: string) => /^mongodb(\+srv)?:\/\//.test(value);
-
 export default async function handler(_req: unknown, res: VercelResponse) {
-  const mongoUri = process.env.MONGODB_URI?.trim() || "";
+  const diagnostics = getMongoDiagnostics();
 
-  if (!mongoUri || !isMongoUri(mongoUri)) {
+  if (!diagnostics.configured || !diagnostics.validScheme) {
     return res.status(500).json({
       message: "MongoDB is not configured correctly",
-      detail: "Set MONGODB_URI in Vercel and make sure it starts with mongodb:// or mongodb+srv://."
+      detail: "Set MONGODB_URI in Vercel and make sure it starts with mongodb:// or mongodb+srv://.",
+      diagnostics
     });
   }
 
   try {
-    const client = new MongoClient(mongoUri);
+    const client = createMongoClient();
     await client.connect();
     const hasAdmin = (await client.db().collection("adminusers").countDocuments()) > 0;
     await client.close();

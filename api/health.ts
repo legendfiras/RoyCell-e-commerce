@@ -1,33 +1,37 @@
-import { MongoClient } from "mongodb";
+import { createMongoClient, getMongoDiagnostics } from "./_mongo";
+
+export const config = {
+  maxDuration: 15
+};
 
 type VercelResponse = {
   status: (code: number) => VercelResponse;
   json: (body: unknown) => void;
 };
 
-const isMongoUri = (value: string) => /^mongodb(\+srv)?:\/\//.test(value);
-
 export default async function handler(_req: unknown, res: VercelResponse) {
-  const mongoUri = process.env.MONGODB_URI?.trim() || "";
+  const diagnostics = getMongoDiagnostics();
 
-  if (!mongoUri) {
+  if (!diagnostics.configured) {
     return res.status(500).json({
       ok: false,
       api: "online",
-      message: "Missing required environment variable: MONGODB_URI"
+      message: "Missing required environment variable: MONGODB_URI",
+      diagnostics
     });
   }
 
-  if (!isMongoUri(mongoUri)) {
+  if (!diagnostics.validScheme) {
     return res.status(500).json({
       ok: false,
       api: "online",
-      message: "Invalid MONGODB_URI. It must start with mongodb:// or mongodb+srv://."
+      message: "Invalid MONGODB_URI. It must start with mongodb:// or mongodb+srv://.",
+      diagnostics
     });
   }
 
   try {
-    const client = new MongoClient(mongoUri);
+    const client = createMongoClient();
     await client.connect();
     const database = client.db().databaseName;
     await client.db().admin().ping();
@@ -36,14 +40,15 @@ export default async function handler(_req: unknown, res: VercelResponse) {
     return res.status(200).json({
       ok: true,
       api: "online",
-      db: { stateName: "connected", database }
+      db: { stateName: "connected", database, uriHost: diagnostics.uriHost }
     });
   } catch (error) {
     return res.status(500).json({
       ok: false,
       api: "online",
       message: "MongoDB connection failed",
-      detail: error instanceof Error ? error.message : "Unknown MongoDB error"
+      detail: error instanceof Error ? error.message : "Unknown MongoDB error",
+      diagnostics
     });
   }
 }

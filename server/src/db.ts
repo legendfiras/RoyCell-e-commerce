@@ -13,7 +13,13 @@ export const connectDb = async () => {
     return;
   }
 
-  await mongoose.connect(config.mongoUri);
+  await mongoose.connect(config.mongoUri, {
+    tls: true,
+    connectTimeoutMS: 8000,
+    serverSelectionTimeoutMS: 8000,
+    socketTimeoutMS: 10000,
+    maxPoolSize: 5
+  });
   console.log("MongoDB connected");
 };
 
