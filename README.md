@@ -50,6 +50,21 @@ CLIENT_ORIGIN=<your deployed website URL>
 
 After deployment, open `/admin` and sign in with the Mongo admin account.
 
+### Vercel
+
+The project includes `vercel.json`, so Vercel serves the Vite app and sends `/api/*` requests to the serverless Express handler.
+
+In Vercel Project Settings, add these Environment Variables for Production:
+
+```bash
+MONGODB_URI=<your MongoDB Atlas URI ending with /roycell>
+JWT_SECRET=<long random secret, at least 32 characters>
+ADMIN_SETUP_KEY=<private reset key, at least 24 characters>
+CLIENT_ORIGIN=https://your-vercel-domain.vercel.app
+```
+
+Then redeploy. Open `/api/health` first; it should show `"ok": true`. After that, open `/admin`.
+
 ## Debugging
 
 Check API and MongoDB status:

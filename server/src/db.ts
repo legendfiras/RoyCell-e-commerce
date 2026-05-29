@@ -2,6 +2,15 @@ import mongoose from "mongoose";
 import { config } from "./config";
 
 export const connectDb = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  if (mongoose.connection.readyState === 2) {
+    await mongoose.connection.asPromise();
+    return;
+  }
+
   await mongoose.connect(config.mongoUri);
   console.log("MongoDB connected");
 };

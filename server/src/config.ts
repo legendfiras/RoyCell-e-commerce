@@ -12,14 +12,19 @@ const parseList = (value: string) =>
 const defaultClientOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
 const mongoUriPattern = /^mongodb(\+srv)?:\/\//;
 
+const vercelOrigins = [process.env.VERCEL_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL]
+  .filter(Boolean)
+  .map((origin) => `https://${origin}`);
+
 export const config = {
   mongoUri: process.env.MONGODB_URI?.trim() || "",
   jwtSecret: process.env.JWT_SECRET?.trim() || "",
   adminSetupKey: process.env.ADMIN_SETUP_KEY?.trim() || "",
   port: Number(process.env.PORT || 4000),
-  clientOrigins: process.env.CLIENT_ORIGIN
-    ? parseList(process.env.CLIENT_ORIGIN)
-    : defaultClientOrigins
+  clientOrigins: [
+    ...(process.env.CLIENT_ORIGIN ? parseList(process.env.CLIENT_ORIGIN) : defaultClientOrigins),
+    ...vercelOrigins
+  ]
 };
 
 export const assertConfig = () => {
