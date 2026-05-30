@@ -68,7 +68,8 @@ const storePhone = "+96181705240";
 const whatsappNumber = "96181705240";
 const instagramUrl = "https://www.instagram.com/roycell.lb/";
 const tiktokUrl = "https://www.tiktok.com/@roycell.lb";
-const locationUrl = "https://www.google.com/maps/search/?api=1&query=Roy%20Cell%20Lebanon";
+const locationUrl =
+  "https://www.google.com/maps/search/?api=1&query=Roy%20Cell%20Tarik%20Jadideh%20Beirut%20Lebanon";
 const emailUrl =
   "https://mail.google.com/mail/?view=cm&fs=1&to=roycell1@yahoo.com&su=Roy%20Cell%20Inquiry";
 const adminUserKey = "roy-cell-admin-user";
@@ -433,7 +434,6 @@ const productCard = (product: Product) => {
         <p>${product.detail}</p>
         <div class="price-row">
           <strong>${formatPrice(product.price)}</strong>
-          <span>${formatPrice(product.oldPrice)} new</span>
         </div>
         <button class="cart-button" data-add-cart="${product.id}">${icon("bag")} Add to cart</button>
       </div>

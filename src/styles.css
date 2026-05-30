@@ -709,8 +709,7 @@ details {
 }
 
 .rating span,
-.product-copy p:not(.rating),
-.price-row span {
+.product-copy p:not(.rating) {
   color: var(--muted);
 }
 
@@ -735,11 +734,6 @@ details {
 
 .price-row strong {
   font-size: 28px;
-}
-
-.price-row span {
-  font-weight: 800;
-  text-decoration: line-through;
 }
 
 .cart-button {
