@@ -68,8 +68,7 @@ const storePhone = "+96181705240";
 const whatsappNumber = "96181705240";
 const instagramUrl = "https://www.instagram.com/roycell.lb/";
 const tiktokUrl = "https://www.tiktok.com/@roycell.lb";
-const locationUrl =
-  "https://www.google.com/maps/search/?api=1&query=Roy%20Cell%20Tarik%20Jadideh%20Beirut%20Lebanon";
+const locationUrl = "https://maps.app.goo.gl/6vrY4ED7ZdxxR2Ts6";
 const emailUrl =
   "https://mail.google.com/mail/?view=cm&fs=1&to=roycell1@yahoo.com&su=Roy%20Cell%20Inquiry";
 const adminUserKey = "roy-cell-admin-user";
