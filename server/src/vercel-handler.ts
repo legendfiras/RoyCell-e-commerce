@@ -1,5 +1,5 @@
-import { app } from "./app";
-import { connectDb } from "./db";
+import { app } from "./app.js";
+import { connectDb } from "./db.js";
 
 type VercelResponse = {
   status: (code: number) => VercelResponse;

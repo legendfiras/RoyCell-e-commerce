@@ -1,6 +1,6 @@
-import { app } from "./app";
-import { config } from "./config";
-import { connectDb } from "./db";
+import { app } from "./app.js";
+import { config } from "./config.js";
+import { connectDb } from "./db.js";
 
 connectDb()
   .then(() => {

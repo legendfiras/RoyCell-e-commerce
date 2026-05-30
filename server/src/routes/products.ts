@@ -1,8 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
 import sharp from "sharp";
-import { Product } from "../models/Product";
-import { requireAdmin } from "../middleware/auth";
+import { Product } from "../models/Product.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 export const productsRouter = Router();
 

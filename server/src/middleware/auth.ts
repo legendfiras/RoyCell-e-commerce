@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { assertAuthConfig, config } from "../config";
+import { assertAuthConfig, config } from "../config.js";
 
 export type AuthRequest = Request & {
   adminId?: string;

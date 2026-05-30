@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { requireAdmin } from "../middleware/auth";
-import { Order } from "../models/Order";
+import { requireAdmin } from "../middleware/auth.js";
+import { Order } from "../models/Order.js";
 
 export const ordersRouter = Router();
 

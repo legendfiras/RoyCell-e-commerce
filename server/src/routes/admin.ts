@@ -1,9 +1,9 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { assertAdminResetConfig, assertAuthConfig, config } from "../config";
-import { AdminUser } from "../models/AdminUser";
-import { requireAdmin } from "../middleware/auth";
+import { assertAdminResetConfig, assertAuthConfig, config } from "../config.js";
+import { AdminUser } from "../models/AdminUser.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 export const adminRouter = Router();
 
