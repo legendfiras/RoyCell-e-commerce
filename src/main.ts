@@ -1127,6 +1127,44 @@ document.addEventListener("click", (event) => {
   }
 
   if (target.closest("#send-reset-otp")) {
+  const message = document.querySelector<HTMLElement>("#admin-message");
+  const username = document.querySelector<HTMLInputElement>("#admin-username")?.value.trim();
+  const sendButton = document.querySelector<HTMLButtonElement>("#send-reset-otp");
+
+  if (!username) {
+    if (message) message.textContent = "Enter your username first, then request the OTP.";
+    return;
+  }
+
+  if (message) message.textContent = "Sending OTP to admin email...";
+
+  if (sendButton) {
+    sendButton.disabled = true;
+    sendButton.textContent = "Sending...";
+  }
+
+  void fetchJson("/admin/reset-password/request-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username })
+  })
+    .then(() => {
+      if (message) message.textContent = "OTP sent to the admin email. Check your inbox.";
+    })
+    .catch((error) => {
+      if (message) {
+        message.textContent = error instanceof Error ? error.message : "Could not send OTP.";
+      }
+    })
+    .finally(() => {
+      if (sendButton) {
+        sendButton.disabled = false;
+        sendButton.textContent = "Send email OTP";
+      }
+    });
+}
+
+  if (target.closest("#send-reset-otp")) {
     const message = document.querySelector<HTMLElement>("#admin-message");
     const username = document.querySelector<HTMLInputElement>("#admin-username")?.value.trim();
     const sendButton = document.querySelector<HTMLButtonElement>("#send-reset-otp");
