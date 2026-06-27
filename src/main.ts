@@ -605,10 +605,36 @@ const resizeImage = (file: File) =>
 const adminProductForm = (product?: Product) => `
   <form class="admin-product-form ${product ? "inline-edit" : ""}" id="admin-product-form">
     <input class="product-id" type="hidden" value="${product?.id || ""}" />
-    <label>Name<input class="product-name" type="text" value="${product?.name || ""}" required /></label>
-    <label>Details<input class="product-detail" type="text" value="${product?.detail || ""}" placeholder="128 GB - Black - Excellent" required /></label>
-    <label>Category<select class="product-category">${categories.map((category) => `<option ${product?.category === category.label ? "selected" : ""}>${category.label}</option>`).join("")}</select></label>
-    <label>Price<input class="product-price" type="number" min="0" value="${product?.price || ""}" required /></label>
+
+    <label>
+      Name
+      <input class="product-name" type="text" value="${product?.name || ""}" required />
+    </label>
+
+    <label>
+      Details
+      <input class="product-detail" type="text" value="${product?.detail || ""}" placeholder="128 GB - Black - Excellent" required />
+    </label>
+
+    <label>
+      Category / Section
+      <select class="product-category" required>
+        ${categories
+          .map(
+            (category) =>
+              `<option value="${category.label}" ${product?.category === category.label ? "selected" : ""}>
+                ${category.label}
+              </option>`
+          )
+          .join("")}
+      </select>
+    </label>
+
+    <label>
+      Price
+      <input class="product-price" type="number" min="0" value="${product?.price || ""}" required />
+    </label>
+
     <label class="toggle-label">
       Best seller badge
       <span class="admin-toggle">
@@ -616,9 +642,15 @@ const adminProductForm = (product?: Product) => `
         <span></span>
       </span>
     </label>
-    <label>Image<input class="product-image-input" type="file" accept="image/*" /></label>
+
+    <label>
+      Image
+      <input class="product-image-input" type="file" accept="image/*" />
+    </label>
+
     <button type="submit">${product ? "Update product" : "Add product"}</button>
     ${product ? `<button type="button" data-admin-cancel-edit>Cancel</button>` : `<button type="reset">Clear form</button>`}
+
     <p class="admin-message product-message"></p>
   </form>
 `;

@@ -1485,6 +1485,33 @@ details p {
   background: var(--bg);
 }
 
+.admin-product-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-product-form input,
+.admin-product-form select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #d9dee8;
+  border-radius: 14px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #101828;
+  font: inherit;
+}
+
+.admin-product-form select {
+  cursor: pointer;
+}
+
+.admin-product-form input[type="file"] {
+  padding: 12px 14px;
+  min-height: auto;
+}
+
 .admin-product-form.inline-edit {
   grid-column: 1 / -1;
   margin-top: 12px;
