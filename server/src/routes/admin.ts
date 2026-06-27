@@ -64,7 +64,7 @@ adminRouter.post("/login", async (req, res) => {
  * NEW ROUTE 1:
  * Sends OTP to admin email.
  */
-adminRouter.post("/reset-password/request-otp", async (req, res) => {
+adminRouter.post("/request-reset-otp", async (req, res) => {
   const { username } = req.body;
 
   if (!username) {
@@ -123,7 +123,7 @@ adminRouter.post("/reset-password/request-otp", async (req, res) => {
  * NEW ROUTE 2:
  * Confirms OTP and changes password.
  */
-adminRouter.post("/reset-password/confirm-otp", async (req, res) => {
+adminRouter.post("/confirm-reset-otp", async (req, res) => {
   const { username, otp, password } = req.body;
 
   if (!username || !otp || !password || password.length < 8) {

@@ -1143,7 +1143,7 @@ document.addEventListener("click", (event) => {
     sendButton.textContent = "Sending...";
   }
 
-  void fetchJson("/admin/reset-password/request-otp", {
+  void fetchJson("/admin/request-reset-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username })
@@ -1180,7 +1180,7 @@ document.addEventListener("click", (event) => {
       sendButton.textContent = "Sending...";
     }
 
-    void fetchJson("/admin/reset-password/request-otp", {
+    void fetchJson("/admin/request-reset-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username })
@@ -1426,7 +1426,7 @@ Total: ${formatPrice(order.total)}`;
         submitButton.textContent = "Resetting...";
       }
 
-      await fetchJson("/admin/reset-password/confirm-otp", {
+      await fetchJson("/admin/confirm-reset-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, otp, password: newPassword })
