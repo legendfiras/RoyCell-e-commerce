@@ -1,4 +1,4 @@
- import "./styles.css";
+import "./styles.css";
 
 type Product = {
   id: string;
@@ -172,11 +172,7 @@ const state = {
 
 const viteEnv = (import.meta as ImportMeta & { env?: { VITE_API_BASE_URL?: string } }).env;
 const configuredApiBase = viteEnv?.VITE_API_BASE_URL?.trim().replace(/\/$/, "");
-const apiBase =
-  configuredApiBase ||
-  (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
-    ? "http://127.0.0.1:4000/api"
-    : "/api");
+const apiBase = configuredApiBase || "/api";
 const apiDebugKey = "roy-cell-api-debug";
 const appBuildId = "admin-api-diagnostics-2026-05-29";
 
@@ -811,14 +807,14 @@ app.innerHTML = `
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Refurbished tech, checked in Lebanon</p>
+        <p class="eyebrow">Top tech, checked in Lebanon</p>
         <h1>Where Lebanon shops smarter phones.</h1>
         <p class="hero-lede">
           Roy Cell brings inspected iPhone, Android, tablets, laptops, and accessories with clear condition grades and local support.
         </p>
         <div class="hero-actions">
           <a class="primary-button" href="#shop">Shop bestsellers</a>
-          <a class="secondary-button" href="${whatsappLink("Hello Roy Cell, I want to ask about available refurbished phones.")}" target="_blank" rel="noreferrer">WhatsApp Roy Cell</a>
+          <a class="secondary-button" href="${whatsappLink("Hello Roy Cell, I want to ask about available phones.")}" target="_blank" rel="noreferrer">WhatsApp Roy Cell</a>
         </div>
         <ul class="promise-list">
           <li>${icon("shield")} Quality inspection</li>
@@ -917,7 +913,7 @@ app.innerHTML = `
     <div class="footer-grid">
       <section class="footer-brand" aria-label="Roy Cell summary">
         <a href="#" class="footer-logo"><span>Roy</span> Cell</a>
-        <p>Refurbished phones, tablets, laptops, audio gear, and accessories checked for customers across Lebanon.</p>
+        <p>phones, tablets, laptops, audio gear, and accessories checked for customers across Lebanon.</p>
         <div class="footer-socials">
           <a class="social-link" href="${whatsappLink("Hello Roy Cell, I want to ask about your products.")}" target="_blank" rel="noreferrer" aria-label="WhatsApp Roy Cell">${icon("whatsapp")}</a>
           <a class="social-link" href="${instagramUrl}" target="_blank" rel="noreferrer" aria-label="Roy Cell Instagram">${icon("instagram")}</a>

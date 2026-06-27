@@ -3,3 +3,5 @@ dist/
 server/.env
 tmp-edge-profile/
 *.log
+.vercel
+.env*

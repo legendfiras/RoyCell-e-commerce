@@ -9,7 +9,12 @@ const parseList = (value: string) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
-const defaultClientOrigins = ["http://127.0.0.1:5173", "http://localhost:5173"];
+const defaultClientOrigins = [
+  "http://127.0.0.1:5173",
+  "http://localhost:5173",
+  "http://127.0.0.1:3000",
+  "http://localhost:3000",
+];
 const mongoUriPattern = /^mongodb(\+srv)?:\/\//;
 
 const vercelOrigins = [process.env.VERCEL_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL]
