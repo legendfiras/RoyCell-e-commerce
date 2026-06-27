@@ -686,14 +686,18 @@ const adminShell = () => {
             <p class="admin-message" id="admin-message"></p>
           </form>
           <form id="admin-reset-form" class="admin-reset-form" hidden>
-            <label>Reset key<input id="admin-reset-key" type="password" autocomplete="off" required /></label>
+            <p class="admin-message">
+              Enter your username above, send an email OTP, then use the 6-digit code to set a new password.
+            </p>
+            <button type="button" id="send-reset-otp">Send email OTP</button>
+            <label>OTP code<input id="admin-reset-otp" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required /></label>
             <label>New password
               <span class="password-field">
                 <input id="admin-reset-password" type="password" autocomplete="new-password" minlength="8" required />
                 <button type="button" data-toggle-password="admin-reset-password">Show</button>
               </span>
             </label>
-            <button type="submit">Reset password</button>
+            <button type="submit">Reset password with OTP</button>
           </form>
         </section>
       </main>
@@ -1122,6 +1126,41 @@ document.addEventListener("click", (event) => {
     }
   }
 
+  if (target.closest("#send-reset-otp")) {
+    const message = document.querySelector<HTMLElement>("#admin-message");
+    const username = document.querySelector<HTMLInputElement>("#admin-username")?.value.trim();
+    const sendButton = document.querySelector<HTMLButtonElement>("#send-reset-otp");
+
+    if (!username) {
+      if (message) message.textContent = "Enter your username first, then request the OTP.";
+      return;
+    }
+
+    if (message) message.textContent = "Sending OTP to admin email...";
+    if (sendButton) {
+      sendButton.disabled = true;
+      sendButton.textContent = "Sending...";
+    }
+
+    void fetchJson("/admin/reset-password/request-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    })
+      .then(() => {
+        if (message) message.textContent = "OTP sent to the admin email. Check your inbox.";
+      })
+      .catch((error) => {
+        if (message) message.textContent = error instanceof Error ? error.message : "Could not send OTP.";
+      })
+      .finally(() => {
+        if (sendButton) {
+          sendButton.disabled = false;
+          sendButton.textContent = "Send email OTP";
+        }
+      });
+  }
+
   if (target.closest("[data-open-cart]")) {
     document.querySelector("#cart-panel")?.classList.add("open");
     document.querySelector("#cart-panel")?.setAttribute("aria-hidden", "false");
@@ -1325,27 +1364,46 @@ Total: ${formatPrice(order.total)}`;
 
   if (form.id === "admin-reset-form") {
     event.preventDefault();
+
     const message = document.querySelector<HTMLElement>("#admin-message");
     const username = document.querySelector<HTMLInputElement>("#admin-username")?.value.trim();
-    const resetKey = document.querySelector<HTMLInputElement>("#admin-reset-key")?.value;
+    const otp = document.querySelector<HTMLInputElement>("#admin-reset-otp")?.value.trim();
     const newPassword = document.querySelector<HTMLInputElement>("#admin-reset-password")?.value;
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
 
-    if (!username || !resetKey || !newPassword || newPassword.length < 8) {
-      if (message) message.textContent = "Enter username, reset key, and a new password.";
+    if (!username || !otp || !newPassword || newPassword.length < 8) {
+      if (message) message.textContent = "Enter username, OTP, and a new password of at least 8 characters.";
+      return;
+    }
+
+    if (!/^\d{6}$/.test(otp)) {
+      if (message) message.textContent = "OTP must be 6 digits.";
       return;
     }
 
     try {
-      await fetchJson("/admin/reset-password", {
+      if (message) message.textContent = "Resetting password...";
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Resetting...";
+      }
+
+      await fetchJson("/admin/reset-password/confirm-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resetKey, username, password: newPassword })
+        body: JSON.stringify({ username, otp, password: newPassword })
       });
+
       if (message) message.textContent = "Password reset. You can sign in now.";
       form.reset();
       form.hidden = true;
     } catch (error) {
       if (message) message.textContent = error instanceof Error ? error.message : "Reset failed.";
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Reset password with OTP";
+      }
     }
   }
 

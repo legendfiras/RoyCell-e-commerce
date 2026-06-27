@@ -26,10 +26,23 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET?.trim() || "",
   adminSetupKey: process.env.ADMIN_SETUP_KEY?.trim() || "",
   port: Number(process.env.PORT || 4000),
+
   clientOrigins: [
     ...(process.env.CLIENT_ORIGIN ? parseList(process.env.CLIENT_ORIGIN) : defaultClientOrigins),
     ...vercelOrigins
-  ]
+  ],
+
+  email: {
+    host: process.env.EMAIL_HOST?.trim() || "",
+    port: Number(process.env.EMAIL_PORT || 465),
+    secure: process.env.EMAIL_SECURE !== "false",
+    user: process.env.EMAIL_USER?.trim() || "",
+    pass: process.env.EMAIL_PASS?.trim() || "",
+    from: process.env.EMAIL_FROM?.trim() || process.env.EMAIL_USER?.trim() || ""
+  },
+
+  adminResetEmail: process.env.ADMIN_RESET_EMAIL?.trim() || "",
+  otpExpiryMinutes: Number(process.env.OTP_EXPIRY_MINUTES || 10)
 };
 
 export const assertMongoConfig = () => {
